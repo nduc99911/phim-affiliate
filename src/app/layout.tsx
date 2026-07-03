@@ -39,8 +39,7 @@ export default function RootLayout({
               <h1>CineVault</h1>
             </Link>
             <nav>
-              <Link href="/" className="nav-link" style={{ marginRight: '20px' }}>Trang Chủ</Link>
-              <Link href="/admin/login" className="nav-link">Admin</Link>
+              <Link href="/" className="nav-link">Trang Chủ</Link>
             </nav>
           </div>
         </header>
