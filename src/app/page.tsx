@@ -1,65 +1,100 @@
-import Image from "next/image";
+import { supabase } from '@/lib/supabase';
+import Link from 'next/link';
+import SearchBar from '@/components/SearchBar';
 
-export default function Home() {
+const ITEMS_PER_PAGE = 12;
+
+async function getReviews(query: string = '', page: number = 1) {
+  const from = (page - 1) * ITEMS_PER_PAGE;
+  const to = from + ITEMS_PER_PAGE - 1;
+
+  let dbQuery = supabase
+    .from('reviews')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false });
+    
+  if (query) {
+    dbQuery = dbQuery.ilike('title', `%${query}%`);
+  }
+
+  const { data, error, count } = await dbQuery.range(from, to);
+  
+  if (error) {
+    console.error('Lỗi khi tải dữ liệu từ Supabase:', error);
+    return { data: [], count: 0 };
+  }
+  return { data, count: count || 0 };
+}
+
+export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string, page?: string }> }) {
+  const { q = '', page = '1' } = await searchParams;
+  const currentPage = parseInt(page) || 1;
+  const { data: reviews, count } = await getReviews(q, currentPage);
+  
+  const totalPages = Math.ceil(count / ITEMS_PER_PAGE);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div>
+      <div style={{ marginBottom: '40px', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '36px', marginBottom: '16px' }} className="home-title">Khám Phá Phim Mới Nhất</h2>
+        <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 24px auto' }} className="home-desc">
+          Đọc các bài review phim chân thực, sắc sảo và nhận ngay mã bí mật để lấy ưu đãi mua sắm trên Shopee.
+        </p>
+        
+        <SearchBar />
+      </div>
+
+      {reviews.length === 0 ? (
+        <p style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>Không tìm thấy kết quả nào.</p>
+      ) : (
+        <>
+          <div className="grid">
+            {reviews.map((review: any) => (
+              <Link href={`/${review.slug}`} key={review.slug}>
+                <div className="card glass">
+                  <img src={review.thumbnail} alt={review.title} className="card-image" loading="lazy" />
+                  <div className="card-content">
+                    <h3 className="card-title">{review.title}</h3>
+                    <p className="card-quote">"{review.quote}"</p>
+                    <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '14px', display: 'flex', alignItems: 'center', marginTop: 'auto' }}>
+                      Đọc ngay & nhận mã <span style={{ marginLeft: '4px' }}>→</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* Phân trang */}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '40px' }}>
+              {currentPage > 1 ? (
+                <Link href={`/?${q ? `q=${q}&` : ''}page=${currentPage - 1}`} className="btn" style={{ padding: '8px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+                  ← Trang trước
+                </Link>
+              ) : (
+                <span className="btn" style={{ padding: '8px 16px', background: 'transparent', color: 'var(--text-secondary)', cursor: 'not-allowed', opacity: 0.5 }}>
+                  ← Trang trước
+                </span>
+              )}
+              
+              <span style={{ fontWeight: 600 }}>
+                {currentPage} / {totalPages}
+              </span>
+
+              {currentPage < totalPages ? (
+                <Link href={`/?${q ? `q=${q}&` : ''}page=${currentPage + 1}`} className="btn" style={{ padding: '8px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+                  Trang sau →
+                </Link>
+              ) : (
+                <span className="btn" style={{ padding: '8px 16px', background: 'transparent', color: 'var(--text-secondary)', cursor: 'not-allowed', opacity: 0.5 }}>
+                  Trang sau →
+                </span>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
