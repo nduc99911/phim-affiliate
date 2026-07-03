@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
+import AgeGateModal from "@/components/AgeGateModal";
 
 export const metadata: Metadata = {
   title: "CineVault - Review Phim & Nhận Code",
@@ -31,6 +32,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
+        <AgeGateModal />
         <header className="header glass" style={{ borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
           <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Link href="/">
