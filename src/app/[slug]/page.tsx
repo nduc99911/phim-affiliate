@@ -25,6 +25,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${review.title} | CineVault Review`,
     description: review.quote,
+    openGraph: {
+      title: review.title,
+      description: review.quote,
+      images: [review.thumbnail], // Ảnh bìa sẽ hiện khi share lên FB/Zalo
+    },
   };
 }
 
