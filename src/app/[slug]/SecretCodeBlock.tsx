@@ -9,65 +9,53 @@ interface Props {
 export default function SecretCodeBlock({ slug }: Props) {
   const [revealedCode, setRevealedCode] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-  const [step, setStep] = useState(0); // 0: chưa lấy, 1: đang đếm ngược, 2: sẵn sàng
-  const [countdown, setCountdown] = useState<number | null>(null);
-  const [fetchedData, setFetchedData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const startCountdown = async () => {
-    if (step !== 0) return;
+  const handleReveal = async () => {
+    if (revealedCode || loading) return;
     
-    setStep(1);
-    setCountdown(5);
+    // Mở tab TRƯỚC KHI tải dữ liệu để tránh trình duyệt chặn Popup
+    const newWindow = window.open('about:blank', '_blank');
     
-    // Bắt đầu lấy dữ liệu ngầm
-    fetch('/api/click', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setFetchedData(data);
-      })
-      .catch(() => console.error('Lỗi lấy mã'));
-
-    // Đếm ngược 5 giây
-    let timeLeft = 5;
-    const timer = setInterval(() => {
-      timeLeft -= 1;
-      setCountdown(timeLeft);
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        setStep(2); // Sẵn sàng
-      }
-    }, 1000);
-  };
-
-  const handleReveal = () => {
-    if (step === 0) {
-      startCountdown();
-    } else if (step === 2) {
-      // Khi user bấm vào nút "Mã đã sẵn sàng" -> Hành động đồng bộ -> Trình duyệt không chặn Popup
-      if (fetchedData && fetchedData.secretCode) {
-        setRevealedCode(fetchedData.secretCode);
+    setLoading(true);
+    try {
+      const res = await fetch('/api/click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        setRevealedCode(data.secretCode);
         showToast('Đã lấy mã thành công!', 'success');
         
         // Auto-copy mã
-        navigator.clipboard.writeText(fetchedData.secretCode).catch(() => {});
-        
-        // Mở link Affiliate
-        if (fetchedData.affiliateLink) {
-          window.open(fetchedData.affiliateLink, '_blank');
+        if (data.secretCode) {
+          navigator.clipboard.writeText(data.secretCode).catch(() => {});
+        }
+
+        // Chuyển hướng tab vừa mở sang Shopee
+        if (newWindow && data.affiliateLink) {
+          newWindow.location.href = data.affiliateLink;
+        } else if (newWindow) {
+          newWindow.close();
         }
       } else {
-        showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
-        setStep(0);
+        if (newWindow) newWindow.close();
+        showToast('Có lỗi xảy ra, không thể lấy mã!', 'error');
       }
+    } catch (e) {
+      if (newWindow) newWindow.close();
+      showToast('Lỗi kết nối máy chủ', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,42 +107,11 @@ export default function SecretCodeBlock({ slug }: Props) {
               <button 
                 className="btn" 
                 onClick={handleReveal}
-                disabled={step === 1}
-                style={{ 
-                  fontSize: '18px', 
-                  padding: '16px 40px', 
-                  width: '100%', 
-                  maxWidth: '350px',
-                  background: step === 2 ? 'var(--success)' : 'var(--accent)',
-                  animation: step === 2 ? 'pulse 1s infinite' : 'none'
-                }}
+                disabled={loading}
+                style={{ fontSize: '18px', padding: '16px 40px', width: '100%', maxWidth: '300px' }}
               >
-                {step === 0 && 'Lấy Mã Ngay'}
-                {step === 1 && `Đang giải mã... Vui lòng đợi ${countdown}s`}
-                {step === 2 && 'Mã đã sẵn sàng! Mở Shopee Ngay 👉'}
+                {loading ? 'Đang xử lý...' : 'Lấy Mã Ngay'}
               </button>
-              
-              {step === 1 && (
-                <div style={{
-                  marginTop: '16px',
-                  padding: '12px',
-                  backgroundColor: 'rgba(255, 60, 60, 0.1)',
-                  border: '1px dashed var(--accent)',
-                  borderRadius: '8px',
-                  color: 'var(--text-primary)',
-                  fontSize: '14px',
-                  animation: 'pulse 1s infinite'
-                }}>
-                  <style>{`
-                    @keyframes pulse {
-                      0% { opacity: 1; }
-                      50% { opacity: 0.6; }
-                      100% { opacity: 1; }
-                    }
-                  `}</style>
-                  ⏳ <strong>MẸO:</strong> Trong lúc chờ đợi, tranh thủ lụm ngay <strong style={{ color: 'var(--accent)' }}>Voucher Freeship 50k</strong> ở link bên dưới nhé!
-                </div>
-              )}
             </div>
           )}
         </div>
