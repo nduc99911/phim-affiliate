@@ -21,6 +21,8 @@ export default function AdminDashboard() {
   const [isBulking, setIsBulking] = useState(false);
   
   const [defaultShopeeLink, setDefaultShopeeLink] = useState('https://shopee.vn/');
+  const [popunderLink, setPopunderLink] = useState('');
+  const [savingSettings, setSavingSettings] = useState(false);
 
   const [stats, setStats] = useState({ today: 0, week: 0, month: 0, year: 0 });
 
@@ -49,9 +51,39 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/settings?key=popunder_link');
+      if (res.ok) {
+        const data = await res.json();
+        setPopunderLink(data.value || '');
+      }
+    } catch (err) {
+      console.error('Lỗi tải cài đặt');
+    }
+  };
+
+  const savePopunderLink = async () => {
+    setSavingSettings(true);
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'popunder_link', value: popunderLink })
+      });
+      if (res.ok) showToast('Đã lưu Mưa Cookie', 'success');
+      else showToast('Lỗi lưu cài đặt', 'error');
+    } catch (err) {
+      showToast('Lỗi hệ thống', 'error');
+    } finally {
+      setSavingSettings(false);
+    }
+  };
+
   useEffect(() => {
     fetchReviews();
     fetchStats();
+    fetchSettings();
   }, []);
 
   const handleImport = async (e: React.FormEvent) => {
@@ -232,15 +264,33 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="glass" style={{ padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <label style={{ whiteSpace: 'nowrap', fontWeight: 'bold', color: 'var(--accent)' }}>Cài Đặt Mặc Định Link Shopee:</label>
-        <input 
-          className="input" 
-          style={{ marginBottom: 0, flexGrow: 1 }} 
-          value={defaultShopeeLink} 
-          onChange={e => setDefaultShopeeLink(e.target.value)} 
-          placeholder="Nhập link Affiliate gốc vào đây (Sẽ tự động thêm khi Quét/Trích xuất)..."
-        />
+      <div className="glass" style={{ padding: '24px', marginBottom: '24px' }}>
+        <h3 style={{ fontSize: '20px', marginBottom: '16px' }}>Cài Đặt Hệ Thống</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <label style={{ whiteSpace: 'nowrap', fontWeight: 'bold', minWidth: '200px' }}>Mặc Định Link Shopee:</label>
+            <input 
+              className="input" 
+              style={{ marginBottom: 0, flexGrow: 1 }} 
+              value={defaultShopeeLink} 
+              onChange={e => setDefaultShopeeLink(e.target.value)} 
+              placeholder="Nhập link Affiliate gốc vào đây (Sẽ tự động thêm khi Quét/Trích xuất)..."
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <label style={{ whiteSpace: 'nowrap', fontWeight: 'bold', minWidth: '200px', color: 'var(--accent)' }}>Mưa Cookie (Pop-under):</label>
+            <input 
+              className="input" 
+              style={{ marginBottom: 0, flexGrow: 1 }} 
+              value={popunderLink} 
+              onChange={e => setPopunderLink(e.target.value)} 
+              placeholder="Nhập link Affiliate để chạy ngầm (Bỏ trống để tắt)..."
+            />
+            <button className="btn" onClick={savePopunderLink} disabled={savingSettings} style={{ whiteSpace: 'nowrap', padding: '10px 20px' }}>
+              {savingSettings ? 'Đang lưu...' : 'Lưu'}
+            </button>
+          </div>
+        </div>
       </div>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
