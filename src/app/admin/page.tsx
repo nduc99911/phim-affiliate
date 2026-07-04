@@ -19,6 +19,8 @@ export default function AdminDashboard() {
   const [bulkLimit, setBulkLimit] = useState(5);
   const [bulkStatus, setBulkStatus] = useState('');
   const [isBulking, setIsBulking] = useState(false);
+  
+  const [defaultShopeeLink, setDefaultShopeeLink] = useState('https://shopee.vn/');
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
@@ -52,7 +54,7 @@ export default function AdminDashboard() {
         setFormData({
           ...formData,
           ...data.data,
-          affiliateLink: 'https://shopee.vn/'
+          affiliateLink: defaultShopeeLink
         });
         setImportUrl('');
         showToast('Trích xuất thành công! Hãy kiểm tra lại và bấm Thêm.', 'success');
@@ -108,7 +110,7 @@ export default function AdminDashboard() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 ...dataExtract.data,
-                affiliateLink: 'https://shopee.vn/',
+                affiliateLink: defaultShopeeLink,
               }),
             });
             successCount++;
@@ -180,6 +182,17 @@ export default function AdminDashboard() {
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
       <h2 style={{ fontSize: '32px', marginBottom: '24px' }}>Quản Trị Bài Review</h2>
+
+      <div className="glass" style={{ padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <label style={{ whiteSpace: 'nowrap', fontWeight: 'bold', color: 'var(--accent)' }}>Cài Đặt Mặc Định Link Shopee:</label>
+        <input 
+          className="input" 
+          style={{ marginBottom: 0, flexGrow: 1 }} 
+          value={defaultShopeeLink} 
+          onChange={e => setDefaultShopeeLink(e.target.value)} 
+          placeholder="Nhập link Affiliate gốc vào đây (Sẽ tự động thêm khi Quét/Trích xuất)..."
+        />
+      </div>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
         <div className="glass" style={{ padding: '24px' }}>
