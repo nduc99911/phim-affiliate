@@ -6,9 +6,10 @@ export async function POST(request: Request) {
     const { password } = await request.json();
     
     // Mật khẩu đơn giản hardcode (có thể đổi)
-    if (password === (process.env.ADMIN_PASSWORD || 'admin123')) {
+    const expectedPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    if (password === expectedPassword) {
       const cookieStore = await cookies();
-      cookieStore.set('admin_auth', 'true', {
+      cookieStore.set('admin_auth', expectedPassword, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 60 * 60 * 24 // 1 day

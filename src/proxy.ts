@@ -4,7 +4,8 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const authCookie = request.cookies.get('admin_auth');
-  const isAuthenticated = authCookie && authCookie.value === 'true';
+  const expectedPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const isAuthenticated = authCookie && authCookie.value === expectedPassword;
 
   // 1. Bảo vệ toàn bộ trang Admin (trừ trang login)
   if (path.startsWith('/admin') && !path.startsWith('/admin/login')) {
