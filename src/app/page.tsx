@@ -14,7 +14,7 @@ async function getReviews(query: string = '', page: number = 1) {
     .order('created_at', { ascending: false });
     
   if (query) {
-    dbQuery = dbQuery.ilike('title', `%${query}%`);
+    dbQuery = dbQuery.or(`title.ilike.%${query}%,quote.ilike.%${query}%,content.ilike.%${query}%`);
   }
 
   const { data, error, count } = await dbQuery.range(from, to);
@@ -56,7 +56,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
                   <div className="card-content">
                     <h3 className="card-title">{review.title}</h3>
                     <p className="card-quote">"{review.quote}"</p>
-                    <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '14px', display: 'flex', alignItems: 'center', marginTop: 'auto' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', fontSize: '12px', color: 'var(--text-secondary)' }}>
+                      <span>🗓 {new Date(review.created_at).toLocaleDateString('vi-VN')}</span>
+                      <span>👁 {review.clicks || 0} lượt lấy mã</span>
+                    </div>
+                    <span style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '14px', display: 'flex', alignItems: 'center', marginTop: '12px' }}>
                       Đọc ngay & nhận mã <span style={{ marginLeft: '4px' }}>→</span>
                     </span>
                   </div>

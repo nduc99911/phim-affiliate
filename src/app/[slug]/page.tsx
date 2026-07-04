@@ -14,6 +14,16 @@ async function getReview(slug: string) {
   return data;
 }
 
+async function getRelatedReviews(currentSlug: string) {
+  const { data } = await supabase
+    .from('reviews')
+    .select('title, slug, thumbnail')
+    .neq('slug', currentSlug)
+    .order('created_at', { ascending: false })
+    .limit(4);
+  return data || [];
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const review = await getReview(slug);
@@ -36,6 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ReviewDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const review = await getReview(slug);
+  const related = await getRelatedReviews(slug);
 
   if (!review) {
     notFound();
@@ -67,6 +78,27 @@ export default async function ReviewDetail({ params }: { params: Promise<{ slug:
       </div>
 
       <SecretCodeBlock slug={review.slug} />
+
+      {/* Phim Liên Quan */}
+      {related && related.length > 0 && (
+        <div style={{ marginTop: '60px', paddingTop: '40px', borderTop: '1px solid var(--card-border)' }}>
+          <h3 style={{ fontSize: '24px', marginBottom: '24px', color: 'var(--accent)' }}>🔥 Có thể anh em sẽ thích</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
+            {related.map((item) => (
+              <a href={`/${item.slug}`} key={item.slug} style={{ textDecoration: 'none' }}>
+                <div className="card glass" style={{ padding: '0', overflow: 'hidden' }}>
+                  <img src={item.thumbnail} alt={item.title} style={{ width: '100%', height: '140px', objectFit: 'cover' }} />
+                  <div style={{ padding: '12px' }}>
+                    <h4 style={{ fontSize: '14px', margin: 0, color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {item.title}
+                    </h4>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </article>
   );
 }
