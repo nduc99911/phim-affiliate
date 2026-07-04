@@ -19,9 +19,34 @@ export async function POST(request: Request) {
   try {
     const newReview = await request.json();
     
+    // Kiểm tra trùng secretCode
+    if (newReview.secretCode) {
+      const { data: existingCode } = await supabase
+        .from('reviews')
+        .select('id')
+        .eq('secretCode', newReview.secretCode)
+        .maybeSingle();
+        
+      if (existingCode) {
+        return NextResponse.json({ error: 'Mã phim đã tồn tại' }, { status: 409 });
+      }
+    }
+    
     if (!newReview.slug) {
       newReview.slug = newReview.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     }
+    
+    // Kiểm tra trùng slug
+    const { data: existingSlug } = await supabase
+      .from('reviews')
+      .select('id')
+      .eq('slug', newReview.slug)
+      .maybeSingle();
+      
+    if (existingSlug) {
+      return NextResponse.json({ error: 'Phim đã tồn tại (trùng tên)' }, { status: 409 });
+    }
+
     newReview.clicks = 0;
 
     const { data, error } = await supabase

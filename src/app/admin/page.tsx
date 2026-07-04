@@ -94,6 +94,7 @@ export default function AdminDashboard() {
       setBulkStatus(`Tìm thấy ${targetLinks.length} phim. Bắt đầu quét...`);
 
       let successCount = 0;
+      let skipCount = 0;
       for (let i = 0; i < targetLinks.length; i++) {
         setBulkStatus(`Đang xử lý phim ${i + 1}/${targetLinks.length}...`);
         try {
@@ -105,7 +106,7 @@ export default function AdminDashboard() {
           const dataExtract = await resExtract.json();
 
           if (resExtract.ok && dataExtract.success) {
-            await fetch('/api/reviews', {
+            const resPost = await fetch('/api/reviews', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -113,7 +114,14 @@ export default function AdminDashboard() {
                 affiliateLink: defaultShopeeLink,
               }),
             });
-            successCount++;
+            
+            if (resPost.ok) {
+              successCount++;
+            } else {
+              skipCount++;
+            }
+          } else {
+            skipCount++;
           }
         } catch (err) {
           console.error('Lỗi khi quét:', targetLinks[i]);
@@ -121,7 +129,7 @@ export default function AdminDashboard() {
       }
 
       setBulkStatus('');
-      showToast(`Hoàn tất! Đã thêm ${successCount}/${targetLinks.length} phim.`, 'success');
+      showToast(`Hoàn tất! Đã thêm ${successCount} phim (Bỏ qua ${skipCount} phim trùng/lỗi).`, 'success');
       fetchReviews();
     } catch (err: any) {
       setBulkStatus('');
@@ -161,19 +169,25 @@ export default function AdminDashboard() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editingSlug) {
-      await fetch(`/api/reviews/${editingSlug}`, {
+      const res = await fetch(`/api/reviews/${editingSlug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      showToast('Cập nhật thành công!', 'success');
+      if (res.ok) showToast('Cập nhật thành công!', 'success');
+      else showToast('Lỗi cập nhật', 'error');
     } else {
-      await fetch('/api/reviews', {
+      const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      showToast('Thêm phim mới thành công!', 'success');
+      const data = await res.json();
+      if (res.ok) {
+        showToast('Thêm phim mới thành công!', 'success');
+      } else {
+        showToast(data.error || 'Lỗi thêm phim', 'error');
+      }
     }
     handleCancelEdit();
     fetchReviews();
