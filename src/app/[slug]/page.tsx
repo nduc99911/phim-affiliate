@@ -54,6 +54,29 @@ export default async function ReviewDetail({ params }: { params: Promise<{ slug:
 
   return (
     <article style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Review",
+            "itemReviewed": {
+              "@type": "Movie",
+              "name": review.title,
+              "image": review.thumbnail
+            },
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5",
+              "bestRating": "5"
+            },
+            "author": {
+              "@type": "Person",
+              "name": "CineVault Admin"
+            }
+          })
+        }}
+      />
       <img 
         src={review.thumbnail} 
         alt={review.title} 
