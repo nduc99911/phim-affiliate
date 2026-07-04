@@ -12,6 +12,7 @@ export async function POST(request: Request) {
       cookieStore.set('admin_auth', expectedPassword, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
         maxAge: 60 * 60 * 24 // 1 day
       });
       return NextResponse.json({ success: true });
