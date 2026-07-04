@@ -5,6 +5,7 @@ import Script from "next/script";
 import AgeGateModal from "@/components/AgeGateModal";
 import Tracker from "@/components/Tracker";
 import FomoNotification from "@/components/FomoNotification";
+import AntiTheft from "@/components/AntiTheft";
 
 export const metadata: Metadata = {
   title: "CineVault - Review Phim & Nhận Code",
@@ -36,13 +37,17 @@ export default function RootLayout({
       <body>
         <Tracker />
         <FomoNotification />
+        <AntiTheft />
         <AgeGateModal />
         <header className="header glass" style={{ borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>
           <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Link href="/">
               <h1>CineVault</h1>
             </Link>
-            <nav>
+            <nav style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+              <a href="/api/random" className="btn" style={{ padding: '6px 12px', fontSize: '14px', background: 'var(--accent)', color: '#fff' }}>
+                🎲 Khám Phá
+              </a>
               <Link href="/" className="nav-link">Trang Chủ</Link>
             </nav>
           </div>

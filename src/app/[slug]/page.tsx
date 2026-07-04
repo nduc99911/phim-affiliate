@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import SecretCodeBlock from './SecretCodeBlock';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import FakeComments from '@/components/FakeComments';
 
 async function getReview(slug: string) {
   const { data, error } = await supabase
@@ -101,6 +102,7 @@ export default async function ReviewDetail({ params }: { params: Promise<{ slug:
       </div>
 
       <SecretCodeBlock slug={review.slug} />
+      <FakeComments slug={review.slug} />
 
       {/* Phim Liên Quan */}
       {related && related.length > 0 && (
