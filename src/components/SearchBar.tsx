@@ -17,7 +17,7 @@ export default function SearchBar() {
     }
   };
 
-  const categories = ['Y tá', 'Học sinh', 'Cô giáo', 'Vợ người ta', 'Thư ký', 'Chị gái', 'Mẹ kế', 'Vụng trộm'];
+  const categories = ['JAV', 'Phim hay', 'Phim Vietsub', 'Phim không che', 'Học sinh', 'Vụng trộm - Ngoại tình', 'Phim cấp 3', 'Mỹ - Châu Âu', 'XVIDEOS', 'XNXX', 'XXX'];
 
   const handleCategoryClick = (cat: string) => {
     setQuery(cat);
@@ -40,29 +40,39 @@ export default function SearchBar() {
         </button>
       </form>
       
-      {/* Category Chips */}
+      {/* Category Navigation */}
       <div style={{ 
         display: 'flex', 
-        gap: '10px', 
-        overflowX: 'auto', 
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: '8px', 
         paddingBottom: '8px',
-        scrollbarWidth: 'none', // Firefox
-        msOverflowStyle: 'none'  // IE/Edge
-      }}
-      className="hide-scrollbar"
-      >
-        <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+      }}>
+        <button
+          onClick={() => { setQuery(''); router.push('/'); }}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '4px',
+            border: 'none',
+            background: query === '' ? 'var(--accent)' : '#2a2a2a',
+            color: '#fff',
+            cursor: 'pointer',
+            fontSize: '14px',
+            transition: 'all 0.2s'
+          }}
+        >
+          🏠 Trang chủ
+        </button>
         {categories.map(cat => (
           <button
             key={cat}
             onClick={() => handleCategoryClick(cat)}
             style={{
-              padding: '6px 16px',
-              borderRadius: '20px',
-              border: query === cat ? '1px solid var(--accent)' : '1px solid var(--card-border)',
-              background: query === cat ? 'rgba(255, 74, 90, 0.1)' : 'var(--card-bg)',
-              color: query === cat ? 'var(--accent)' : 'var(--text-secondary)',
-              whiteSpace: 'nowrap',
+              padding: '8px 12px',
+              borderRadius: '4px',
+              border: 'none',
+              background: query === cat ? 'var(--accent)' : '#2a2a2a',
+              color: '#fff',
               cursor: 'pointer',
               fontSize: '14px',
               transition: 'all 0.2s'
