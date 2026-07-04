@@ -14,8 +14,8 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // 2. Bảo vệ TẤT CẢ các API Thêm/Sửa/Xóa (chống hacker dùng postman hoặc curl để sửa link)
-  if (path.startsWith('/api/') && !path.startsWith('/api/auth')) {
+  // 2. Bảo vệ TẤT CẢ các API Thêm/Sửa/Xóa (trừ auth, click, track)
+  if (path.startsWith('/api/') && !path.startsWith('/api/auth') && !path.startsWith('/api/click') && !path.startsWith('/api/track')) {
     if (request.method !== 'GET' && !isAuthenticated) {
       return NextResponse.json({ error: 'Truy cập bị từ chối. Hacker không có cửa đâu!' }, { status: 401 });
     }
