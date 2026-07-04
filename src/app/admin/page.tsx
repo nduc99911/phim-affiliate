@@ -22,6 +22,8 @@ export default function AdminDashboard() {
   
   const [defaultShopeeLink, setDefaultShopeeLink] = useState('https://shopee.vn/');
 
+  const [stats, setStats] = useState({ today: 0, week: 0, month: 0, year: 0 });
+
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -35,8 +37,21 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/stats');
+      if (res.ok) {
+        const data = await res.json();
+        setStats(data);
+      }
+    } catch (err) {
+      console.error('Lỗi tải thống kê');
+    }
+  };
+
   useEffect(() => {
     fetchReviews();
+    fetchStats();
   }, []);
 
   const handleImport = async (e: React.FormEvent) => {
@@ -196,6 +211,26 @@ export default function AdminDashboard() {
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
       <h2 style={{ fontSize: '32px', marginBottom: '24px' }}>Quản Trị Bài Review</h2>
+
+      {/* Thống Kê Truy Cập */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+        <div className="glass" style={{ padding: '16px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>Hôm nay</p>
+          <h3 style={{ fontSize: '28px', color: 'var(--success)' }}>{stats.today}</h3>
+        </div>
+        <div className="glass" style={{ padding: '16px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>Tuần này</p>
+          <h3 style={{ fontSize: '28px', color: '#3b82f6' }}>{stats.week}</h3>
+        </div>
+        <div className="glass" style={{ padding: '16px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>Tháng này</p>
+          <h3 style={{ fontSize: '28px', color: '#8b5cf6' }}>{stats.month}</h3>
+        </div>
+        <div className="glass" style={{ padding: '16px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '8px' }}>Năm nay</p>
+          <h3 style={{ fontSize: '28px', color: 'var(--accent)' }}>{stats.year}</h3>
+        </div>
+      </div>
 
       <div className="glass" style={{ padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <label style={{ whiteSpace: 'nowrap', fontWeight: 'bold', color: 'var(--accent)' }}>Cài Đặt Mặc Định Link Shopee:</label>
