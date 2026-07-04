@@ -6,6 +6,7 @@ import AgeGateModal from "@/components/AgeGateModal";
 import Tracker from "@/components/Tracker";
 import FomoNotification from "@/components/FomoNotification";
 import AntiTheft from "@/components/AntiTheft";
+import GiftFab from "@/components/GiftFab";
 
 export const metadata: Metadata = {
   title: "CineVault - Review Phim & Nhận Code",
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body>
         <Tracker />
         <FomoNotification />
+        <GiftFab />
         <AntiTheft />
         <AgeGateModal />
         <header className="header glass" style={{ borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0 }}>

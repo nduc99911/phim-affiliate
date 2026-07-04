@@ -11,15 +11,14 @@ export default function SecretCodeBlock({ slug }: Props) {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
+  const [countdown, setCountdown] = useState<number | null>(null);
+
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleReveal = async () => {
-    if (revealedCode) return;
-    
-    setLoading(true);
+  const executeReveal = async () => {
     try {
       const res = await fetch('/api/click', {
         method: 'POST',
@@ -41,6 +40,11 @@ export default function SecretCodeBlock({ slug }: Props) {
           });
         }
 
+        // Auto-copy mã (Nâng cấp)
+        if (data.secretCode) {
+          navigator.clipboard.writeText(data.secretCode).catch(() => {});
+        }
+
         // Mở link affiliate trong tab mới
         if (data.affiliateLink) {
           window.open(data.affiliateLink, '_blank');
@@ -53,7 +57,25 @@ export default function SecretCodeBlock({ slug }: Props) {
       showToast('Lỗi kết nối máy chủ', 'error');
     } finally {
       setLoading(false);
+      setCountdown(null);
     }
+  };
+
+  const handleReveal = () => {
+    if (revealedCode || loading) return;
+    
+    setLoading(true);
+    setCountdown(5);
+    
+    let timeLeft = 5;
+    const timer = setInterval(() => {
+      timeLeft -= 1;
+      setCountdown(timeLeft);
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        executeReveal();
+      }
+    }, 1000);
   };
 
   const handleCopy = () => {
@@ -100,14 +122,40 @@ export default function SecretCodeBlock({ slug }: Props) {
           </div>
           
           {!revealedCode && (
-            <button 
-              className="btn" 
-              onClick={handleReveal}
-              disabled={loading}
-              style={{ fontSize: '18px', padding: '16px 40px' }}
-            >
-              {loading ? 'Đang xử lý...' : 'Lấy Mã Ngay'}
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              <button 
+                className="btn" 
+                onClick={handleReveal}
+                disabled={loading}
+                style={{ fontSize: '18px', padding: '16px 40px', width: '100%', maxWidth: '300px' }}
+              >
+                {countdown !== null 
+                  ? `Đang giải mã... Vui lòng đợi ${countdown}s` 
+                  : 'Lấy Mã Ngay'}
+              </button>
+              
+              {countdown !== null && (
+                <div style={{
+                  marginTop: '16px',
+                  padding: '12px',
+                  backgroundColor: 'rgba(255, 60, 60, 0.1)',
+                  border: '1px dashed var(--accent)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)',
+                  fontSize: '14px',
+                  animation: 'pulse 1s infinite'
+                }}>
+                  <style>{`
+                    @keyframes pulse {
+                      0% { opacity: 1; }
+                      50% { opacity: 0.6; }
+                      100% { opacity: 1; }
+                    }
+                  `}</style>
+                  ⏳ <strong>MẸO:</strong> Trong lúc chờ đợi, tranh thủ lụm ngay <strong style={{ color: 'var(--accent)' }}>Voucher Freeship 50k</strong> ở link bên dưới nhé!
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
