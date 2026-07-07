@@ -3,8 +3,13 @@ import * as cheerio from 'cheerio';
 
 export async function POST(request: Request) {
   try {
-    const { url } = await request.json();
+    let { url } = await request.json();
     if (!url) return NextResponse.json({ success: false, error: 'Thiếu URL' }, { status: 400 });
+    
+    // Đảm bảo URL có giao thức
+    if (!url.startsWith('http')) {
+      url = 'https://' + url;
+    }
 
     const res = await fetch(url, {
       headers: {
@@ -19,6 +24,7 @@ export async function POST(request: Request) {
 
     const links: string[] = [];
     const isMissAV = url.includes('missav');
+    const isJavHDZ = url.includes('javhdz');
 
     if (isMissAV) {
       $('a').each((i, el) => {
@@ -40,6 +46,13 @@ export async function POST(request: Request) {
               }
             } catch (e) {}
           }
+        }
+      });
+    } else if (isJavHDZ) {
+      $('a').each((i, el) => {
+        const href = $(el).attr('href');
+        if (href && href.includes('javhdz') && href.endsWith('.html')) {
+          links.push(href);
         }
       });
     } else {

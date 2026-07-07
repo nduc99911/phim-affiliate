@@ -3,8 +3,13 @@ import * as cheerio from 'cheerio';
 
 export async function POST(request: Request) {
   try {
-    const { url } = await request.json();
+    let { url } = await request.json();
     if (!url) return NextResponse.json({ success: false, error: 'Thiếu URL' }, { status: 400 });
+
+    // Đảm bảo URL có giao thức
+    if (!url.startsWith('http')) {
+      url = 'https://' + url;
+    }
 
     const res = await fetch(url, {
       headers: {
@@ -19,6 +24,7 @@ export async function POST(request: Request) {
 
     // Bóc tách dữ liệu
     const isMissAV = url.includes('missav');
+    const isJavHDZ = url.includes('javhdz');
     
     let title = '';
     let thumbnail = '';
@@ -55,6 +61,27 @@ export async function POST(request: Request) {
         const titleMatch = title.match(/^([a-zA-Z0-9]+-[a-zA-Z0-9]+)/);
         secretCode = titleMatch ? titleMatch[1] : '';
       }
+    } else if (isJavHDZ) {
+      title = $('meta[property="og:title"]').attr('content') || $('title').text();
+      thumbnail = $('meta[property="og:image"]').attr('content') || '';
+      content = $('meta[property="og:description"]').attr('content') || '';
+
+      const codeMatch = content.match(/\[([a-zA-Z0-9]+-[0-9]+)\]/) || title.match(/\[([a-zA-Z0-9]+-[0-9]+)\]/);
+      if (codeMatch) {
+        secretCode = codeMatch[1];
+      } else {
+        const urlMatch = url.match(/-([0-9]+)\.html$/);
+        if (urlMatch) {
+          secretCode = urlMatch[1];
+        }
+      }
+
+      const tags: string[] = [];
+      $('a[rel="tag"]').each((i, el) => {
+        tags.push($(el).text());
+      });
+      categories = tags.join(', ');
+      // javhdz thường đưa tên diễn viên vào tag hoặc tiêu đề, để trống để người dùng tự nhập hoặc regex từ tags
     } else {
       title = $('h1.page-title').text().trim() || $('title').text().replace('- VLXX.COM', '').trim();
       thumbnail = $('meta[property="og:image"]').attr('content') || '';
