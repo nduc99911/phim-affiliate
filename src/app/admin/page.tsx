@@ -329,7 +329,7 @@ export default function AdminDashboard() {
                 placeholder="SL" 
                 value={bulkLimit} 
                 onChange={e => setBulkLimit(Number(e.target.value))}
-                min="1" max="20"
+                min="1" max="100"
                 required
               />
             </div>
