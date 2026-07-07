@@ -22,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" />
         {/* Google Analytics placeholder - Replace GA_MEASUREMENT_ID with real ID */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"

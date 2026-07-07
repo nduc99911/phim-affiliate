@@ -246,12 +246,12 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen pb-16 pt-8 font-sans" style={{ maxWidth: '1200px', margin: '0 auto', color: '#e2e8f0' }}>
+    <div className="min-h-screen pb-16 pt-8 font-sans bg-slate-950" style={{ maxWidth: '1200px', margin: '0 auto', color: '#e2e8f0' }}>
       
       {/* Header Section */}
-      <header className="mb-12 border-b border-white/5 pb-6">
+      <header className="mb-12 border-b border-slate-800 pb-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-lg shadow-red-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-lg">
             <LayoutDashboard className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -274,9 +274,9 @@ export default function AdminDashboard() {
         
         {/* Left Column: Settings */}
         <div className="lg:col-span-5 flex flex-col gap-8">
-          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-7 shadow-xl">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400">
+              <div className="p-2 bg-rose-900 rounded-lg text-rose-400">
                 <Settings className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">Cấu Hình Growth Hack</h3>
@@ -288,7 +288,7 @@ export default function AdminDashboard() {
                 <div className="relative">
                   <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input 
-                    className="w-full bg-[#0b0f19] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all placeholder-slate-600"
                     value={defaultShopeeLink} 
                     onChange={e => setDefaultShopeeLink(e.target.value)} 
                     placeholder="https://shopee.vn/..."
@@ -299,7 +299,7 @@ export default function AdminDashboard() {
                 <label className="block text-sm font-medium text-slate-400 mb-2">Mưa Cookie (Pop-under)</label>
                 <div className="flex gap-3">
                   <input 
-                    className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+                    className="flex-grow bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all placeholder-slate-600"
                     value={popunderLink} 
                     onChange={e => setPopunderLink(e.target.value)} 
                     placeholder="Link mở ngầm..."
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
                   <button 
                     onClick={savePopunderLink} 
                     disabled={savingSettings}
-                    className="bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl px-5 font-medium text-sm transition-all flex items-center gap-2"
+                    className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 rounded-xl px-5 font-medium text-sm transition-all flex items-center gap-2"
                   >
                     <Save className="w-4 h-4" />
                     Lưu
@@ -320,30 +320,30 @@ export default function AdminDashboard() {
         
         {/* Right Column: Scrapers */}
         <div className="lg:col-span-7 flex flex-col gap-6">
-          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-7 shadow-xl">
              <div className="flex items-center gap-3 mb-6">
-               <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
+               <div className="p-2 bg-emerald-900 rounded-lg text-emerald-400">
                  <LinkIcon className="w-5 h-5" />
                </div>
                <h3 className="text-lg font-semibold text-white">Bóc Tách Dữ Liệu (1 Link)</h3>
              </div>
              <form onSubmit={handleImport} className="flex gap-3">
                <input 
-                 className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder-slate-600"
+                 className="flex-grow bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder-slate-600"
                  placeholder="Dán URL phim (MissAV, JavHDZ, VLXX)..." 
                  value={importUrl} 
                  onChange={e => setImportUrl(e.target.value)} 
                />
-               <button type="submit" disabled={importing} className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 font-medium text-sm transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+               <button type="submit" disabled={importing} className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 font-medium text-sm transition-all flex items-center gap-2 shadow-lg whitespace-nowrap">
                  {importing ? 'Đang lấy...' : 'Bóc Tách'}
                </button>
              </form>
           </div>
 
-          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-7 shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-900 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none opacity-20"></div>
             <div className="flex items-center gap-3 mb-6 relative z-10">
-              <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+              <div className="p-2 bg-indigo-900 rounded-lg text-indigo-400">
                 <Database className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">Quét Hàng Loạt Tự Động</h3>
@@ -351,7 +351,7 @@ export default function AdminDashboard() {
             <form onSubmit={handleBulkExtract} className="flex flex-col gap-4 relative z-10">
               <div className="flex gap-3">
                 <input 
-                  className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder-slate-600"
+                  className="flex-grow bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all placeholder-slate-600"
                   placeholder="URL Danh mục/Trang chủ (VD: https://javhdz.ws/)" 
                   value={bulkUrl} 
                   onChange={e => setBulkUrl(e.target.value)} 
@@ -360,7 +360,7 @@ export default function AdminDashboard() {
                 <div className="relative">
                   <input 
                     type="number"
-                    className="w-24 bg-[#0b0f19] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-indigo-500/50 transition-all"
+                    className="w-24 bg-slate-950 border border-slate-800 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-indigo-500 transition-all"
                     value={bulkLimit} 
                     onChange={e => setBulkLimit(Number(e.target.value))}
                     min="1" max="100"
@@ -369,7 +369,7 @@ export default function AdminDashboard() {
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">SL:</span>
                 </div>
               </div>
-              <button type="submit" disabled={isBulking} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-3 font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+              <button type="submit" disabled={isBulking} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-3 font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-lg">
                 {isBulking ? (
                   <span className="animate-pulse">Đang Quét Dữ Liệu...</span>
                 ) : 'Bắt Đầu Quét & Thêm Phim'}
@@ -386,9 +386,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Editor Form */}
-      <div id="edit-form" className={`bg-[#131825] border rounded-3xl p-8 mb-12 shadow-xl transition-all duration-500 ${editingSlug ? 'border-rose-500/30 shadow-rose-500/10' : 'border-white/5'}`}>
+      <div id="edit-form" className={`bg-slate-900 border rounded-3xl p-8 mb-12 shadow-xl transition-all duration-500 ${editingSlug ? 'border-rose-500 shadow-rose-900' : 'border-slate-800'}`}>
         <div className="flex items-center gap-3 mb-8">
-          <div className={`p-2 rounded-lg ${editingSlug ? 'bg-rose-500/10 text-rose-400' : 'bg-white/5 text-slate-300'}`}>
+          <div className={`p-2 rounded-lg ${editingSlug ? 'bg-rose-900 text-rose-400' : 'bg-slate-800 text-slate-300'}`}>
             {editingSlug ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
           </div>
           <h3 className="text-xl font-bold text-white">
@@ -407,7 +407,7 @@ export default function AdminDashboard() {
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-slate-400 mb-2">Nội dung chi tiết</label>
             <textarea 
-              className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-rose-500/50 transition-all min-h-[140px]"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-rose-500 transition-all min-h-32"
               value={formData.content} 
               onChange={e => setFormData({...formData, content: e.target.value})} 
               required 
@@ -417,13 +417,13 @@ export default function AdminDashboard() {
           <FormInput label="Mã xem phim (Secret Code)" value={formData.secretCode} onChange={v => setFormData({...formData, secretCode: v})} />
           <FormInput label="Link Affiliate Nhận Code" value={formData.affiliateLink} onChange={v => setFormData({...formData, affiliateLink: v})} />
           
-          <div className="md:col-span-2 flex gap-4 mt-4 pt-4 border-t border-white/5">
-            <button type="submit" className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-xl px-8 py-3 font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-500/20 flex-grow">
+          <div className="md:col-span-2 flex gap-4 mt-4 pt-4 border-t border-slate-800">
+            <button type="submit" className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-xl px-8 py-3 font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-lg flex-grow">
               <Save className="w-4 h-4" />
               {editingSlug ? 'Cập Nhật Thay Đổi' : 'Đăng Bài Lên Web'}
             </button>
             {editingSlug && (
-              <button type="button" onClick={handleCancelEdit} className="bg-transparent border border-slate-600 hover:bg-white/5 text-slate-300 rounded-xl px-6 py-3 font-medium text-sm transition-all">
+              <button type="button" onClick={handleCancelEdit} className="bg-transparent border border-slate-600 hover:bg-slate-800 text-slate-300 rounded-xl px-6 py-3 font-medium text-sm transition-all">
                 Hủy
               </button>
             )}
@@ -432,15 +432,15 @@ export default function AdminDashboard() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-[#131825] border border-white/5 rounded-3xl shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-800">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-slate-800 rounded-lg text-slate-300">
+            <div className="p-2 bg-slate-700 rounded-lg text-slate-300">
               <Database className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-white">Kho Phim Đã Đăng</h3>
           </div>
-          <span className="bg-slate-800 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full">{reviews.length} phim</span>
+          <span className="bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full">{reviews.length} phim</span>
         </div>
         
         {loading ? (
@@ -451,36 +451,36 @@ export default function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/5 bg-[#0b0f19]/50 text-slate-400 text-xs uppercase tracking-wider">
+                <tr className="border-b border-slate-800 bg-slate-950 text-slate-400 text-xs uppercase tracking-wider">
                   <th className="p-5 font-semibold">Phim</th>
                   <th className="p-5 font-semibold text-center w-32">Mã Video</th>
                   <th className="p-5 font-semibold text-center w-24">Click</th>
                   <th className="p-5 font-semibold text-right w-32">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-sm">
+              <tbody className="divide-y divide-slate-800 text-sm">
                 {reviews.map(review => (
-                  <tr key={review.slug} className={`hover:bg-white/[0.02] transition-colors ${editingSlug === review.slug ? 'bg-rose-500/5' : ''}`}>
+                  <tr key={review.slug} className={`hover:bg-slate-800 transition-colors ${editingSlug === review.slug ? 'bg-rose-950' : ''}`}>
                     <td className="p-5">
                       <div className="font-semibold text-white mb-1 line-clamp-1">{review.title}</div>
                       <div className="text-xs text-slate-500 line-clamp-1">{review.quote}</div>
                     </td>
                     <td className="p-5 text-center">
-                      <span className="inline-block bg-slate-800 text-slate-300 border border-white/10 px-2.5 py-1 rounded-md text-xs font-mono tracking-wide">
+                      <span className="inline-block bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-md text-xs font-mono tracking-wide">
                         {review.secretCode}
                       </span>
                     </td>
                     <td className="p-5 text-center">
-                      <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 font-bold px-2.5 py-1 rounded-full text-xs">
+                      <span className="inline-flex items-center justify-center bg-emerald-900 text-emerald-400 font-bold px-2.5 py-1 rounded-full text-xs">
                         {review.clicks || 0}
                       </span>
                     </td>
                     <td className="p-5">
                       <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => handleEdit(review)} className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all" title="Chỉnh sửa">
+                        <button onClick={() => handleEdit(review)} className="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all" title="Chỉnh sửa">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(review.slug)} className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all" title="Xóa">
+                        <button onClick={() => handleDelete(review.slug)} className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-900 rounded-lg transition-all" title="Xóa">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -501,7 +501,7 @@ export default function AdminDashboard() {
       </div>
 
       {toast && (
-        <div className={`fixed bottom-6 right-6 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border ${toast.type === 'success' ? 'bg-emerald-900/90 border-emerald-500/30 text-emerald-100' : 'bg-rose-900/90 border-rose-500/30 text-rose-100'} backdrop-blur-md z-50 animate-in slide-in-from-right-4 fade-in duration-300`}>
+        <div className={`fixed bottom-6 right-6 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border ${toast.type === 'success' ? 'bg-emerald-900 border-emerald-500 text-emerald-100' : 'bg-rose-900 border-rose-500 text-rose-100'} backdrop-blur-md z-50 animate-in slide-in-from-right-4 fade-in duration-300`}>
           {toast.type === 'success' ? <CheckCircle className="w-5 h-5 text-emerald-400" /> : <XCircle className="w-5 h-5 text-rose-400" />}
           <span className="font-medium text-sm">{toast.message}</span>
         </div>
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
 // Subcomponents
 function StatCard({ title, value, icon, color, glow = false }: { title: string, value: number, icon: any, color: string, glow?: boolean }) {
   return (
-    <div className={`bg-[#131825] border ${glow ? 'border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.15)]' : 'border-white/5 shadow-xl'} rounded-3xl p-5 relative overflow-hidden group`}>
+    <div className={`bg-slate-900 border ${glow ? 'border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.15)]' : 'border-slate-800 shadow-xl'} rounded-3xl p-5 relative overflow-hidden group`}>
       <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${color} opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity`}></div>
       <div className="flex items-center gap-3 mb-4">
         <div className={`p-2 rounded-lg bg-gradient-to-br ${color} text-white shadow-sm`}>
@@ -533,7 +533,7 @@ function FormInput({ label, value, onChange }: { label: string, value: string, o
     <div>
       <label className="block text-sm font-medium text-slate-400 mb-2">{label}</label>
       <input 
-        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all placeholder-slate-600"
         value={value} 
         onChange={e => onChange(e.target.value)} 
         required 
