@@ -18,14 +18,40 @@ export async function POST(request: Request) {
     const $ = cheerio.load(html);
 
     const links: string[] = [];
-    $('.video-item > a').each((i, el) => {
-      const href = $(el).attr('href');
-      if (href && href.startsWith('/video/')) {
-        // Tạo URL tuyệt đối dựa trên URL gốc
-        const baseUrl = new URL(url).origin;
-        links.push(baseUrl + href);
-      }
-    });
+    const isMissAV = url.includes('missav');
+
+    if (isMissAV) {
+      $('a').each((i, el) => {
+        let href = $(el).attr('href');
+        if (href) {
+          if (href.startsWith('/')) {
+            href = new URL(url).origin + href;
+          }
+          if (href.startsWith('http')) {
+            try {
+              const urlObj = new URL(href);
+              if (urlObj.hostname.includes('missav')) {
+                const parts = urlObj.pathname.split('/');
+                const slug = parts[parts.length - 1];
+                // Lọc ra các link chứa dấu gạch ngang và số (dấu hiệu của mã video AV như mla-274)
+                if (slug && slug.includes('-') && /\d/.test(slug)) {
+                  links.push(href);
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      });
+    } else {
+      $('.video-item > a').each((i, el) => {
+        const href = $(el).attr('href');
+        if (href && href.startsWith('/video/')) {
+          // Tạo URL tuyệt đối dựa trên URL gốc
+          const baseUrl = new URL(url).origin;
+          links.push(baseUrl + href);
+        }
+      });
+    }
 
     // Lọc trùng lặp
     const uniqueLinks = [...new Set(links)];
