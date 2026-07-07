@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   BarChart3, Settings, Link as LinkIcon, Link2, 
-  Trash2, Edit, Save, Plus, Database, MousePointerClick, CheckCircle, XCircle 
+  Trash2, Edit, Save, Plus, Database, MousePointerClick, CheckCircle, XCircle, ChevronRight, LayoutDashboard, Globe
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -246,119 +246,113 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen py-10" style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
+    <div className="min-h-screen pb-16 pt-8 font-sans" style={{ maxWidth: '1200px', margin: '0 auto', color: '#e2e8f0' }}>
       
-      <header className="mb-10 flex items-center justify-between">
-        <div>
-          <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 flex items-center gap-3">
-            <Settings className="w-10 h-10 text-red-500" />
-            Dashboard Quản Trị
-          </h2>
-          <p className="text-gray-400 mt-2">Quản lý kho phim affiliate của bạn một cách dễ dàng.</p>
+      {/* Header Section */}
+      <header className="mb-12 border-b border-white/5 pb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-lg shadow-red-500/20">
+            <LayoutDashboard className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-white">Bảng Điều Khiển</h1>
+            <p className="text-sm text-slate-400 mt-1">Quản lý kho nội dung Affiliate và tối ưu hóa chuyển đổi</p>
+          </div>
         </div>
       </header>
 
-      {/* Thống Kê Truy Cập & Click */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <p className="text-sm text-gray-400 font-medium mb-1">View Hôm Nay</p>
-          <h3 className="text-3xl font-bold text-blue-400">{stats.today}</h3>
-        </div>
-        <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <p className="text-sm text-gray-400 font-medium mb-1">Tuần Này</p>
-          <h3 className="text-3xl font-bold text-purple-400">{stats.week}</h3>
-        </div>
-        <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <p className="text-sm text-gray-400 font-medium mb-1">Tháng Này</p>
-          <h3 className="text-3xl font-bold text-pink-400">{stats.month}</h3>
-        </div>
-        <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <p className="text-sm text-gray-400 font-medium mb-1">Năm Nay</p>
-          <h3 className="text-3xl font-bold text-white">{stats.year}</h3>
-        </div>
-        <div className="glass p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group border-red-500/30">
-          <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <p className="text-sm text-gray-400 font-medium mb-1 flex items-center gap-1">
-            <MousePointerClick className="w-4 h-4 text-red-400" /> Tổng Click Mã
-          </p>
-          <h3 className="text-3xl font-extrabold text-red-500">{stats.totalClicks}</h3>
-        </div>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-12">
+        <StatCard title="Truy Cập Hôm Nay" value={stats.today} icon={<Globe />} color="from-blue-500 to-cyan-400" />
+        <StatCard title="Trong Tuần" value={stats.week} icon={<BarChart3 />} color="from-indigo-500 to-purple-500" />
+        <StatCard title="Trong Tháng" value={stats.month} icon={<BarChart3 />} color="from-fuchsia-500 to-pink-500" />
+        <StatCard title="Cả Năm" value={stats.year} icon={<BarChart3 />} color="from-slate-500 to-slate-400" />
+        <StatCard title="Tổng Click Mã" value={stats.totalClicks} icon={<MousePointerClick />} color="from-rose-500 to-red-500" glow />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
         
-        {/* Cài Đặt Affiliate */}
-        <div className="glass p-6 rounded-2xl relative overflow-hidden flex flex-col h-full">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
-          <h3 className="text-xl font-bold mb-5 flex items-center gap-2">
-            <Link2 className="w-5 h-5 text-red-400" />
-            Cấu Hình Affiliate & Growth
-          </h3>
-          
-          <div className="space-y-5 flex-grow">
-            <div>
-              <label className="block text-sm text-gray-400 mb-2 font-medium">Link Shopee Mặc Định (Thêm tự động)</label>
-              <input 
-                className="input w-full" 
-                value={defaultShopeeLink} 
-                onChange={e => setDefaultShopeeLink(e.target.value)} 
-                placeholder="https://shopee.vn/..."
-              />
+        {/* Left Column: Settings */}
+        <div className="lg:col-span-5 flex flex-col gap-8">
+          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-rose-500/10 rounded-lg text-rose-400">
+                <Settings className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Cấu Hình Growth Hack</h3>
             </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-2 font-medium">Mưa Cookie (Mở Pop-under ngầm)</label>
-              <div className="flex gap-3">
-                <input 
-                  className="input flex-grow" 
-                  value={popunderLink} 
-                  onChange={e => setPopunderLink(e.target.value)} 
-                  placeholder="Để trống để tắt tính năng này..."
-                />
-                <button 
-                  className="btn whitespace-nowrap !mb-[16px] flex items-center gap-2" 
-                  onClick={savePopunderLink} 
-                  disabled={savingSettings}
-                >
-                  <Save className="w-4 h-4" />
-                  {savingSettings ? 'Đang lưu...' : 'Lưu'}
-                </button>
+            
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-2">Link Affiliate Mặc Định</label>
+                <div className="relative">
+                  <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input 
+                    className="w-full bg-[#0b0f19] border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+                    value={defaultShopeeLink} 
+                    onChange={e => setDefaultShopeeLink(e.target.value)} 
+                    placeholder="https://shopee.vn/..."
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-2">Mưa Cookie (Pop-under)</label>
+                <div className="flex gap-3">
+                  <input 
+                    className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+                    value={popunderLink} 
+                    onChange={e => setPopunderLink(e.target.value)} 
+                    placeholder="Link mở ngầm..."
+                  />
+                  <button 
+                    onClick={savePopunderLink} 
+                    disabled={savingSettings}
+                    className="bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl px-5 font-medium text-sm transition-all flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    Lưu
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Scraper / Auto Add */}
-        <div className="flex flex-col gap-6">
-          <div className="glass p-6 rounded-2xl relative overflow-hidden">
-             <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-green-400">
-               <LinkIcon className="w-5 h-5" /> Trích Xuất Phim (1 Link)
-             </h3>
+        {/* Right Column: Scrapers */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
+          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl">
+             <div className="flex items-center gap-3 mb-6">
+               <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
+                 <LinkIcon className="w-5 h-5" />
+               </div>
+               <h3 className="text-lg font-semibold text-white">Bóc Tách Dữ Liệu (1 Link)</h3>
+             </div>
              <form onSubmit={handleImport} className="flex gap-3">
                <input 
-                 className="input flex-grow !mb-0" 
-                 placeholder="Dán URL (MissAV/JavHDZ/VLXX)..." 
+                 className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder-slate-600"
+                 placeholder="Dán URL phim (MissAV, JavHDZ, VLXX)..." 
                  value={importUrl} 
                  onChange={e => setImportUrl(e.target.value)} 
                />
-               <button type="submit" className="btn !bg-green-500 hover:!bg-green-600 !mb-0 flex items-center gap-2 whitespace-nowrap" disabled={importing}>
-                 {importing ? 'Đang cào...' : 'Bóc Tách'}
+               <button type="submit" disabled={importing} className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 font-medium text-sm transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+                 {importing ? 'Đang lấy...' : 'Bóc Tách'}
                </button>
              </form>
           </div>
 
-          <div className="glass p-6 rounded-2xl relative overflow-hidden">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-400">
-              <Database className="w-5 h-5" /> Quét Hàng Loạt (Auto Cào)
-            </h3>
-            <form onSubmit={handleBulkExtract} className="flex flex-col gap-3">
+          <div className="bg-[#131825] border border-white/5 rounded-3xl p-7 shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+            <div className="flex items-center gap-3 mb-6 relative z-10">
+              <div className="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+                <Database className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-semibold text-white">Quét Hàng Loạt Tự Động</h3>
+            </div>
+            <form onSubmit={handleBulkExtract} className="flex flex-col gap-4 relative z-10">
               <div className="flex gap-3">
                 <input 
-                  className="input flex-grow !mb-0" 
-                  placeholder="URL Danh mục (VD: https://javhdz.ws/)" 
+                  className="flex-grow bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all placeholder-slate-600"
+                  placeholder="URL Danh mục/Trang chủ (VD: https://javhdz.ws/)" 
                   value={bulkUrl} 
                   onChange={e => setBulkUrl(e.target.value)} 
                   required
@@ -366,23 +360,24 @@ export default function AdminDashboard() {
                 <div className="relative">
                   <input 
                     type="number"
-                    className="input w-24 !mb-0 pl-10" 
+                    className="w-24 bg-[#0b0f19] border border-white/5 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-indigo-500/50 transition-all"
                     value={bulkLimit} 
                     onChange={e => setBulkLimit(Number(e.target.value))}
                     min="1" max="100"
                     required
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">SL:</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm font-medium">SL:</span>
                 </div>
               </div>
-              <button type="submit" className="btn !bg-blue-600 hover:!bg-blue-700 flex items-center justify-center gap-2" disabled={isBulking}>
+              <button type="submit" disabled={isBulking} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-3 font-medium text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
                 {isBulking ? (
-                  <span className="animate-pulse">Đang Quét Hệ Thống...</span>
-                ) : 'Bắt Đầu Quét Tự Động'}
+                  <span className="animate-pulse">Đang Quét Dữ Liệu...</span>
+                ) : 'Bắt Đầu Quét & Thêm Phim'}
               </button>
               {bulkStatus && (
-                <div className="mt-2 text-sm text-blue-300 bg-blue-900/30 p-2 rounded flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 animate-spin" /> {bulkStatus}
+                <div className="mt-1 text-xs text-indigo-300 flex items-center justify-center gap-2">
+                  <div className="w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
+                  {bulkStatus}
                 </div>
               )}
             </form>
@@ -390,107 +385,113 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Form Sửa / Thêm Mới */}
-      <div id="edit-form" className={`glass p-8 rounded-2xl mb-10 transition-all duration-300 border-2 ${editingSlug ? 'border-red-500/50 shadow-[0_0_20px_rgba(255,74,90,0.2)]' : 'border-transparent'}`}>
-        <h3 className={`text-2xl font-bold mb-6 flex items-center gap-2 ${editingSlug ? 'text-red-400' : 'text-white'}`}>
-          {editingSlug ? <Edit className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
-          {editingSlug ? 'Chỉnh Sửa Thông Tin Phim' : 'Đăng Phim Mới (Thủ công)'}
-        </h3>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-          <div>
-            <label className="font-semibold text-gray-300">Tên phim</label>
-            <input className="input" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
+      {/* Editor Form */}
+      <div id="edit-form" className={`bg-[#131825] border rounded-3xl p-8 mb-12 shadow-xl transition-all duration-500 ${editingSlug ? 'border-rose-500/30 shadow-rose-500/10' : 'border-white/5'}`}>
+        <div className="flex items-center gap-3 mb-8">
+          <div className={`p-2 rounded-lg ${editingSlug ? 'bg-rose-500/10 text-rose-400' : 'bg-white/5 text-slate-300'}`}>
+            {editingSlug ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
           </div>
-          <div>
-            <label className="font-semibold text-gray-300">Ảnh bìa (URL Thumbnail)</label>
-            <input className="input" value={formData.thumbnail} onChange={e => setFormData({...formData, thumbnail: e.target.value})} required />
-          </div>
+          <h3 className="text-xl font-bold text-white">
+            {editingSlug ? 'Chỉnh Sửa Bài Viết' : 'Thêm Phim Mới'}
+          </h3>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormInput label="Tên phim" value={formData.title} onChange={v => setFormData({...formData, title: v})} />
+          <FormInput label="Ảnh bìa (URL)" value={formData.thumbnail} onChange={v => setFormData({...formData, thumbnail: v})} />
+          
           <div className="md:col-span-2">
-            <label className="font-semibold text-gray-300">Trích dẫn (Quote hiển thị ngoài card)</label>
-            <input className="input" value={formData.quote} onChange={e => setFormData({...formData, quote: e.target.value})} required />
+            <FormInput label="Trích dẫn (Quote ngắn)" value={formData.quote} onChange={v => setFormData({...formData, quote: v})} />
           </div>
+          
           <div className="md:col-span-2">
-            <label className="font-semibold text-gray-300">Nội dung chi tiết (Mô tả, diễn viên...)</label>
-            <textarea className="input min-h-[120px]" value={formData.content} onChange={e => setFormData({...formData, content: e.target.value})} required />
+            <label className="block text-sm font-medium text-slate-400 mb-2">Nội dung chi tiết</label>
+            <textarea 
+              className="w-full bg-[#0b0f19] border border-white/5 rounded-xl p-4 text-sm text-white focus:outline-none focus:border-rose-500/50 transition-all min-h-[140px]"
+              value={formData.content} 
+              onChange={e => setFormData({...formData, content: e.target.value})} 
+              required 
+            />
           </div>
-          <div>
-            <label className="font-semibold text-gray-300">Mã xem phim (Mã bí mật)</label>
-            <input className="input" value={formData.secretCode} onChange={e => setFormData({...formData, secretCode: e.target.value})} required />
-          </div>
-          <div>
-            <label className="font-semibold text-gray-300">Link Affiliate đích (Shopee, Lazada...)</label>
-            <input className="input" value={formData.affiliateLink} onChange={e => setFormData({...formData, affiliateLink: e.target.value})} required />
-          </div>
-          <div className="md:col-span-2 flex gap-4 mt-2">
-            <button type="submit" className="btn flex-grow text-lg py-3 flex items-center justify-center gap-2">
-              <Save className="w-5 h-5" />
-              {editingSlug ? 'Lưu Thay Đổi' : 'Đăng Bài Lên Web'}
+          
+          <FormInput label="Mã xem phim (Secret Code)" value={formData.secretCode} onChange={v => setFormData({...formData, secretCode: v})} />
+          <FormInput label="Link Affiliate Nhận Code" value={formData.affiliateLink} onChange={v => setFormData({...formData, affiliateLink: v})} />
+          
+          <div className="md:col-span-2 flex gap-4 mt-4 pt-4 border-t border-white/5">
+            <button type="submit" className="bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-xl px-8 py-3 font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-500/20 flex-grow">
+              <Save className="w-4 h-4" />
+              {editingSlug ? 'Cập Nhật Thay Đổi' : 'Đăng Bài Lên Web'}
             </button>
             {editingSlug && (
-              <button type="button" onClick={handleCancelEdit} className="btn !bg-transparent border !border-gray-500 hover:!bg-gray-800 text-gray-300 px-6">
-                Hủy Chỉnh Sửa
+              <button type="button" onClick={handleCancelEdit} className="bg-transparent border border-slate-600 hover:bg-white/5 text-slate-300 rounded-xl px-6 py-3 font-medium text-sm transition-all">
+                Hủy
               </button>
             )}
           </div>
         </form>
       </div>
 
-      {/* Bảng Dữ Liệu */}
-      <div className="glass p-6 rounded-2xl">
-        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-          <Database className="w-5 h-5 text-gray-400" />
-          Kho Phim Đã Đăng ({reviews.length})
-        </h3>
+      {/* Data Table */}
+      <div className="bg-[#131825] border border-white/5 rounded-3xl shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-slate-800 rounded-lg text-slate-300">
+              <Database className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Kho Phim Đã Đăng</h3>
+          </div>
+          <span className="bg-slate-800 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full">{reviews.length} phim</span>
+        </div>
         
         {loading ? (
-          <div className="flex justify-center p-10">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500"></div>
+          <div className="flex justify-center p-16">
+            <div className="w-8 h-8 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-white/10 text-gray-400 text-sm">
-                  <th className="p-4 font-medium">Tên Phim / Quote</th>
-                  <th className="p-4 font-medium w-32 text-center">Mã Video</th>
-                  <th className="p-4 font-medium w-24 text-center">Click</th>
-                  <th className="p-4 font-medium w-32 text-right">Thao Tác</th>
+                <tr className="border-b border-white/5 bg-[#0b0f19]/50 text-slate-400 text-xs uppercase tracking-wider">
+                  <th className="p-5 font-semibold">Phim</th>
+                  <th className="p-5 font-semibold text-center w-32">Mã Video</th>
+                  <th className="p-5 font-semibold text-center w-24">Click</th>
+                  <th className="p-5 font-semibold text-right w-32">Thao Tác</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/5 text-sm">
                 {reviews.map(review => (
-                  <tr key={review.slug} className={`border-b border-white/5 hover:bg-white/5 transition-colors ${editingSlug === review.slug ? 'bg-red-500/10' : ''}`}>
-                    <td className="p-4">
-                      <div className="font-semibold text-white line-clamp-1">{review.title}</div>
-                      <div className="text-xs text-gray-500 line-clamp-1 mt-1">{review.quote}</div>
+                  <tr key={review.slug} className={`hover:bg-white/[0.02] transition-colors ${editingSlug === review.slug ? 'bg-rose-500/5' : ''}`}>
+                    <td className="p-5">
+                      <div className="font-semibold text-white mb-1 line-clamp-1">{review.title}</div>
+                      <div className="text-xs text-slate-500 line-clamp-1">{review.quote}</div>
                     </td>
-                    <td className="p-4 text-center">
-                      <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded text-xs font-mono">{review.secretCode}</span>
+                    <td className="p-5 text-center">
+                      <span className="inline-block bg-slate-800 text-slate-300 border border-white/10 px-2.5 py-1 rounded-md text-xs font-mono tracking-wide">
+                        {review.secretCode}
+                      </span>
                     </td>
-                    <td className="p-4 text-center font-bold text-green-400">
-                      {review.clicks || 0}
+                    <td className="p-5 text-center">
+                      <span className="inline-flex items-center justify-center bg-emerald-500/10 text-emerald-400 font-bold px-2.5 py-1 rounded-full text-xs">
+                        {review.clicks || 0}
+                      </span>
                     </td>
-                    <td className="p-4 text-right flex justify-end gap-2">
-                      <button 
-                        onClick={() => handleEdit(review)}
-                        className="p-2 bg-gray-800 hover:bg-gray-700 text-white rounded transition-colors"
-                        title="Sửa"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(review.slug)}
-                        className="p-2 bg-red-900/50 hover:bg-red-600 text-red-300 hover:text-white rounded transition-colors"
-                        title="Xóa"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                    <td className="p-5">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => handleEdit(review)} className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all" title="Chỉnh sửa">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(review.slug)} className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all" title="Xóa">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
                 {reviews.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="p-10 text-center text-gray-500">Chưa có phim nào. Bắt đầu bằng cách dán URL bên trên nhé!</td>
+                    <td colSpan={4} className="p-16 text-center text-slate-500">
+                      Chưa có phim nào trong cơ sở dữ liệu.
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -500,11 +501,43 @@ export default function AdminDashboard() {
       </div>
 
       {toast && (
-        <div className={`toast ${toast.type} flex items-center gap-2`}>
-          {toast.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
-          {toast.message}
+        <div className={`fixed bottom-6 right-6 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border ${toast.type === 'success' ? 'bg-emerald-900/90 border-emerald-500/30 text-emerald-100' : 'bg-rose-900/90 border-rose-500/30 text-rose-100'} backdrop-blur-md z-50 animate-in slide-in-from-right-4 fade-in duration-300`}>
+          {toast.type === 'success' ? <CheckCircle className="w-5 h-5 text-emerald-400" /> : <XCircle className="w-5 h-5 text-rose-400" />}
+          <span className="font-medium text-sm">{toast.message}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+// Subcomponents
+function StatCard({ title, value, icon, color, glow = false }: { title: string, value: number, icon: any, color: string, glow?: boolean }) {
+  return (
+    <div className={`bg-[#131825] border ${glow ? 'border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.15)]' : 'border-white/5 shadow-xl'} rounded-3xl p-5 relative overflow-hidden group`}>
+      <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${color} opacity-10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:opacity-20 transition-opacity`}></div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`p-2 rounded-lg bg-gradient-to-br ${color} text-white shadow-sm`}>
+          <div className="w-4 h-4 [&>svg]:w-4 [&>svg]:h-4">
+            {icon}
+          </div>
+        </div>
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{title}</p>
+      </div>
+      <h3 className="text-3xl font-black text-white ml-1">{value}</h3>
+    </div>
+  );
+}
+
+function FormInput({ label, value, onChange }: { label: string, value: string, onChange: (val: string) => void }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-400 mb-2">{label}</label>
+      <input 
+        className="w-full bg-[#0b0f19] border border-white/5 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-rose-500/50 focus:ring-1 focus:ring-rose-500/50 transition-all placeholder-slate-600"
+        value={value} 
+        onChange={e => onChange(e.target.value)} 
+        required 
+      />
     </div>
   );
 }
